@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shopping/controller/tab_controller.dart';
+import 'package:shopping/presentation/custom_navigation_icon_icons.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
@@ -8,7 +9,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  final MyTabController _tab = Get.put(MyTabController());
+  final MyTabController _tab = Get.put(MyTabController(), permanent: false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +28,46 @@ class _HomeState extends State<Home> {
             child: Icon(Icons.exit_to_app_outlined),
           )],
       ),
-      body: Center(
-        child: Text('자기계발에 도움이 되는 어플 제작예정 -> 기부 어플'),
-      ),
-      bottomNavigationBar : TabBar(
-        controller: _tab.controller,
-        tabs: _tab.myTabs,),
-    );
+      
+      body: Obx(() => IndexedStack(
+        index : _tab.tabIndex.value,
+        children: [
+          Text('신청하기'),
+          Text('등록하기'),
+          Text('My Page'),
+        ],
+      ),),
+
+      bottomNavigationBar : BottomNavigationBar(
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        onTap: _tab.changeTabIndex,
+        currentIndex: _tab.tabIndex.value,
+        items: [
+          BottomNavigationBarItem(
+            label : '신청하기',
+            icon : Container(
+              margin : EdgeInsets.only(bottom : 7),
+              child : Icon(Icons.call_made,)
+            ), 
+          ),
+          BottomNavigationBarItem(
+            label : '등록하기',
+            icon : Container(
+              margin : EdgeInsets.only(bottom : 7),
+              child : Icon(Icons.add_box_outlined,),
+            ), 
+          ),
+          BottomNavigationBarItem(
+            label : 'My Page',
+            icon : Container(
+              margin : EdgeInsets.only(bottom : 7),
+              child : Icon(Icons.favorite_border,),
+            ), 
+          ),
+        ],
+      ),);
   }
 }
